@@ -5,17 +5,24 @@ import 'package:meals/widgets/category_grid_item.dart';
 import 'package:meals/screeens/meals.dart';
 import 'package:meals/models/category.dart' ;
 
-class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({super.key});
+import '../models/meal.dart';
 
+class CategoriesScreen extends StatelessWidget {
+  const CategoriesScreen({
+    super.key,
+    required this.onToggleFavorite,
+  });
+  final void Function(Meal meal) onToggleFavorite; // ✅ this line should be here
   void _selectCategory(BuildContext context,Category category) {
     // context stateless mein globally nhi hota hai
-    final filteredMeals =dummyMeals.where((meal)=>meal.categories.contains(category.id)).toList();
+    final filteredMeals =dummyMeals.where((meal)=>
+        meal.categories.contains(category.id)).toList();
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (ctx) => MealsScreen(
           title: category.title,
           meals: filteredMeals,
+          onToggleFavorite: onToggleFavorite,
         ),
       ),
     );
@@ -23,11 +30,7 @@ class CategoriesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pick Your Category'),
-      ),
-      body: GridView(
+    return  GridView(
         padding: const EdgeInsets.all(24),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -46,7 +49,6 @@ class CategoriesScreen extends StatelessWidget {
                 }
             ),
         ],
-      ),
-    );
+      );
   }
 }
